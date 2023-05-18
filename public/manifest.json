@@ -1,0 +1,31 @@
+{
+    "short_name": "APBS Miftahul Huda",
+    "name": "APBS Miftahul Huda",
+    "background_color": "#FAD02C",
+    "orientation": "portrait",
+    "description": "Aplikasi Anggaran dan Belanja Sekolah Miftahul Huda",
+    "icons": [
+        {
+            "src": "./assets/image/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "./assets/image/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "./assets/image/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "./assets/image/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "fullscreen"
+}

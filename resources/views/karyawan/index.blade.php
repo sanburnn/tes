@@ -1,0 +1,92 @@
+@extends('layouts.app')
+@section('title', isset($title) ? $title : 'Karyawan - Yayasan Miftahul Huda')
+@section('content')
+@component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+@endcomponent
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card demo-icons">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title">Data {{ Request::routeIs('index_guru') ? 'Guru' : 'Karyawan' }}</h5>
+                        </div>
+                        @hasanyrole('super admin|admin sekolah')
+                            <div class="col text-right">
+                                <a href="{{ route('karyawan.create') }}" class="btn btn-outline-warning"><i class="fa fa-plus"></i> Tambah</a>
+                            </div>
+                        @endhasanyrole
+                    </div>
+                    <p class="card-category">Daftar {{ Request::routeIs('index_guru') ? 'Guru' : 'Karyawan' }} yang ada di setiap sekolah dibawah naungan
+                        <a href="/home">Yayasan Miftahul Huda</a>
+                    </p>			    
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <th style="width: 10%">No</th>
+                                <th style="width: 20%">Nama</th>
+                                <th style="width: 10%">NIP</th>
+                                <th style="width: 20%">Sekolah</th>
+                                <th style="width: 20%">Jabatan</th>
+                                @hasanyrole('super admin|admin sekolah')
+                                    <th style="width: 20%">Aksi</th>
+                                @endhasanyrole
+                            </thead>
+                            <tbody>
+                                @foreach ($karyawan as $value)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $value->nama ?? '-' }}</td>
+                                        <td>{{ $value->nip ?? '-' }}</td>
+                                        <td class="text-capitalize">{{ $value->nama_sekolah ?? '-' }}</td>
+                                        <td>{{ $value->nama_jabatan ?? '-' }}</td>
+                                        @hasanyrole('super admin|admin sekolah')
+                                            <td class="d-flex" style="gap: .5rem;">
+                                                <a href="{{ route('karyawan.show', $value->id) }}" class="btn btn-outline-info" data-toggle="tooltip" title="Detail"><i class="fa fa-eye"></i></a>
+                                                <a href="{{ route('karyawan.edit', $value->id) }}" class="btn btn-outline-warning" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a>    
+                                                @hasanyrole('admin sekolah')
+                                                    @if (Request::routeIs('index_guru'))
+                                                        <form action="{{ route('karyawan.destroy', $value->id) }}" method="post" onsubmit="return confirm('Non aktifkan karyawan {{ $value->nama }} ini?');">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button type="submit" class="btn btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                                        </form>         
+                                                    @endif
+                                                @endhasanyrole
+                                                @hasanyrole('super admin')
+                                                    @if (Request::routeIs('karyawan.index'))
+                                                        <form action="{{ route('karyawan.destroy', $value->id) }}" method="post" onsubmit="return confirm('Non aktifkan karyawan {{ $value->nama }} ini?');">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button type="submit" class="btn btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                                        </form>         
+                                                    @endif
+                                                @endhasanyrole
+                                            </td>
+                                        @endhasanyrole
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>   
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@push('javascript')
+<script type="text/javascript">
+	$.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    var table = $(document).ready(function() {
+        $('#dataTable').dataTable();
+    });
+
+</script>
+@endpush
